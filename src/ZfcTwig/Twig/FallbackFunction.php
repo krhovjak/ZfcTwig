@@ -2,10 +2,10 @@
 
 namespace ZfcTwig\Twig;
 
-use Twig_Function;
+use Twig_SimpleFunction;
 use Zend\View\Helper\HelperInterface;
 
-class FallbackFunction extends Twig_Function
+class FallbackFunction extends Twig_SimpleFunction
 {
     /**
      * @var HelperInterface
@@ -16,7 +16,7 @@ class FallbackFunction extends Twig_Function
     {
         $this->helper = $helper;
 
-        parent::__construct(array('is_safe' => array('all')));
+        parent::__construct($helper, null, array('is_safe' => array('all')));
     }
 
     /**
