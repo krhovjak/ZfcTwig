@@ -5,8 +5,10 @@ ZfcTwig is a module that integrates the [Twig](http://twig.sensiolabs.org) templ
 
 ## Installation
 
- 1. Add `"zf-commons/zfc-twig": "dev-master"` to your `composer.json` file and run `php composer.phar update`.
- 2. Add `ZfcTwig` to your `config/application.config.php` file under the `modules` key.
+ 1. Add `"krhovjak/zfc-twig": "dev-master"` to your `composer.json` file in `require` section
+ 2. Add  `{"type": "vcs", "url": "git@github.com:krhovjak/ZfcTwig.git"}` to your `composer.json` file in `repositories` section 
+ 3. Run `php composer.phar update`
+ 4. Add `ZfcTwig` to your `config/application.config.php` file under the `modules` key.
 
 ## Configuration
 

@@ -1,5 +1,5 @@
 {
-    "name": "zf-commons/zfc-twig",
+    "name": "krhovjak/zfc-twig",
     "description": "Zend Framework 2 Module that provides a Twig rendering strategy and extensions to render actions or trigger events from your templates",
     "type": "library",
     "keywords": [
@@ -7,7 +7,7 @@
         "module",
         "zf2"
     ],
-    "homepage": "http://www.github.com/ZF-Commons/ZfcTwig/",
+    "homepage": "https://github.com/krhovjak/ZfcTwig",
     "authors": [
         {
             "name": "Kyle Spraggs",
@@ -18,7 +18,7 @@
             "name": "Cosmin Harangus",
             "email": "cosmin@zendexperts.com",
             "homepage": "http://www.zendexperts.com/"
-        }
+        } 
     ],
     "require": {
         "php": ">=5.3.3",

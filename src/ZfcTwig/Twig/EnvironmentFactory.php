@@ -19,9 +19,18 @@ class EnvironmentFactory implements FactoryInterface
         /** @var \ZfcTwig\moduleOptions $options */
         $options  = $serviceLocator->get('ZfcTwig\ModuleOptions');
         $envClass = $options->getEnvironmentClass();
+        
+        if (!$serviceLocator->has($options->getEnvironmentLoader())) {
+            throw new RuntimeException(
+                sprintf(
+                    'Loader with alias "%s" could not be found!',
+                    $options->getEnvironmentLoader()
+                )
+            );
+        }
 
         /** @var \Twig_Environment $env */
-        $env = new $envClass(null, $options->getEnvironmentOptions());
+        $env = new $envClass($serviceLocator->get($options->getEnvironmentLoader()), $options->getEnvironmentOptions());
 
         if ($options->getEnableFallbackFunctions()) {
             $helperPluginManager = $serviceLocator->get('ViewHelperManager');
@@ -34,17 +43,6 @@ class EnvironmentFactory implements FactoryInterface
                 }
             );
         }
-
-        if (!$serviceLocator->has($options->getEnvironmentLoader())) {
-            throw new RuntimeException(
-                sprintf(
-                    'Loader with alias "%s" could not be found!',
-                    $options->getEnvironmentLoader()
-                )
-            );
-        }
-
-        $env->setLoader($serviceLocator->get($options->getEnvironmentLoader()));
 
         foreach ($options->getGlobals() as $name => $value) {
             $env->addGlobal($name, $value);
