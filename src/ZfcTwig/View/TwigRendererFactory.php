@@ -2,31 +2,40 @@
 
 namespace ZfcTwig\View;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 class TwigRendererFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return TwigRenderer
+     * @param  ContainerInterface $container
+     * @param  string             $requestedName
+     * @param  null|array         $options
+     * @return object
+     * @throws ServiceNotFoundException if unable to resolve the service.
+     * @throws ServiceNotCreatedException if an exception is raised when
+     *     creating a service.
+     * @throws ContainerException if any other error occurs
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         /** @var \ZfcTwig\moduleOptions $options */
-        $options = $serviceLocator->get('ZfcTwig\ModuleOptions');
+        $options = $container->get('ZfcTwig\ModuleOptions');
 
         $renderer = new TwigRenderer(
-            $serviceLocator->get('Zend\View\View'),
-            $serviceLocator->get('Twig_Loader_Chain'),
-            $serviceLocator->get('Twig_Environment'),
-            $serviceLocator->get('ZfcTwig\View\TwigResolver')
+            $container->get('Zend\View\View'),
+            $container->get('Twig_Loader_Chain'),
+            $container->get('Twig_Environment'),
+            $container->get('ZfcTwig\View\TwigResolver')
         );
 
         $renderer->setCanRenderTrees($options->getDisableZfmodel());
-        $renderer->setHelperPluginManager($serviceLocator->get('ZfcTwigViewHelperManager'));
+        $renderer->setHelperPluginManager($container->get('ZfcTwigViewHelperManager'));
 
         return $renderer;
     }

@@ -2,25 +2,35 @@
 
 namespace ZfcTwig\Twig;
 
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use RuntimeException;
 use Twig_Environment;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 class EnvironmentFactory implements FactoryInterface
 {
     /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return \Twig_Environment
-     * @throws \RuntimeException
+     * Create an object
+     *
+     * @param  ContainerInterface $container
+     * @param  string             $requestedName
+     * @param  null|array         $options
+     * @return object
+     * @throws ServiceNotFoundException if unable to resolve the service.
+     * @throws ServiceNotCreatedException if an exception is raised when
+     *     creating a service.
+     * @throws ContainerException if any other error occurs
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         /** @var \ZfcTwig\moduleOptions $options */
-        $options  = $serviceLocator->get('ZfcTwig\ModuleOptions');
+        $options  = $container->get('ZfcTwig\ModuleOptions');
         $envClass = $options->getEnvironmentClass();
-        
-        if (!$serviceLocator->has($options->getEnvironmentLoader())) {
+
+        if (!$container->has($options->getEnvironmentLoader())) {
             throw new RuntimeException(
                 sprintf(
                     'Loader with alias "%s" could not be found!',
@@ -30,10 +40,10 @@ class EnvironmentFactory implements FactoryInterface
         }
 
         /** @var \Twig_Environment $env */
-        $env = new $envClass($serviceLocator->get($options->getEnvironmentLoader()), $options->getEnvironmentOptions());
+        $env = new $envClass($container->get($options->getEnvironmentLoader()), $options->getEnvironmentOptions());
 
         if ($options->getEnableFallbackFunctions()) {
-            $helperPluginManager = $serviceLocator->get('ViewHelperManager');
+            $helperPluginManager = $container->get('ViewHelperManager');
             $env->registerUndefinedFunctionCallback(
                 function ($name) use ($helperPluginManager) {
                     if ($helperPluginManager->has($name)) {
