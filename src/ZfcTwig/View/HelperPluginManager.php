@@ -7,13 +7,15 @@ use Zend\View\HelperPluginManager as ZendHelperPluginManager;
 class HelperPluginManager extends ZendHelperPluginManager
 {
     /**
-     * Default set of helpers factories
-     *
-     * @var array
+     * HelperPluginManager constructor.
+     * @param null $configOrContainerInstance
+     * @param array $v3config
      */
-    protected $factories = array(
-        'flashmessenger' => 'Zend\View\Helper\Service\FlashMessengerFactory',
-    );
+    public function __construct($configOrContainerInstance = null, array $v3config = [])
+    {
+        $this->factories['flashmessenger'] = \Zend\View\Helper\Service\FlashMessengerFactory::class;
+        parent::__construct($configOrContainerInstance, $v3config);
+    }
 
     /**
      * Default set of helpers
